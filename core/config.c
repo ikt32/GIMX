@@ -95,7 +95,10 @@ void cfg_set_ffb_tweaks(const s_config_entry * entry)
   int *axis_address = &adapter_get(entry->controller_id)->axis[axis];
   ginfo("setting ffb_tweaks for controller_id: %d, device_id: %d, profile_id: %d, axis: %d, axis_address: %p\n", 
     entry->controller_id, entry->device.id, entry->profile_id, axis, axis_address);
-  ffb_tweaks[entry->controller_id][entry->profile_id].axis_address = axis_address;
+  ffb_tweaks[entry->controller_id][entry->profile_id].g29.axis_address = axis_address;
+  ffb_tweaks[entry->controller_id][entry->profile_id].g29.zero_gain = entry->params.ffb_tweaks.g29.zero_gain;
+  ffb_tweaks[entry->controller_id][entry->profile_id].g29.axis_range = entry->params.ffb_tweaks.g29.axis_range;
+  ffb_tweaks[entry->controller_id][entry->profile_id].g29.enable = entry->params.ffb_tweaks.g29.enable;
   ffb_tweaks[entry->controller_id][entry->profile_id].invert = entry->params.ffb_tweaks.invert;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.rumble = entry->params.ffb_tweaks.gain.rumble;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.constant = entry->params.ffb_tweaks.gain.constant;
@@ -115,7 +118,10 @@ void cfg_init_ffb_tweaks()
   {
     for (j = 0; j < MAX_PROFILES; ++j)
     {
-      ffb_tweaks[i][j].axis_address = NULL;
+      ffb_tweaks[i][j].g29.enable = 0;
+      ffb_tweaks[i][j].g29.axis_address = NULL;
+      ffb_tweaks[i][j].g29.zero_gain = 10;
+      ffb_tweaks[i][j].g29.axis_range = 300;
       ffb_tweaks[i][j].invert = 0;
       ffb_tweaks[i][j].gain.rumble = 100;
       ffb_tweaks[i][j].gain.constant = 100;

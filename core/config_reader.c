@@ -1066,6 +1066,13 @@ static void ProcessGainElement(xmlNode * a_node)
   GetIntProp(a_node, X_ATTR_DAMPER, &entry.params.ffb_tweaks.gain.damper);
 }
 
+static void ProcessG29CorrectionElement(xmlNode * a_node)
+{
+  entry.params.ffb_tweaks.g29.enable = 1;
+  GetIntProp(a_node, X_ATTR_ZERO_GAIN, &entry.params.ffb_tweaks.g29.zero_gain);
+  GetIntProp(a_node, X_ATTR_AXIS_RANGE, &entry.params.ffb_tweaks.g29.axis_range);
+}
+
 static int ProcessForceFeedbackElement(xmlNode * a_node)
 {
   int ret = 0;
@@ -1073,6 +1080,7 @@ static int ProcessForceFeedbackElement(xmlNode * a_node)
 
   reset_entry();
 
+  entry.params.ffb_tweaks.g29.enable = 0;
   entry.params.ffb_tweaks.gain.rumble = 100;
   entry.params.ffb_tweaks.gain.constant = 100;
   entry.params.ffb_tweaks.gain.spring = 100;
@@ -1095,6 +1103,9 @@ static int ProcessForceFeedbackElement(xmlNode * a_node)
       else if (xmlStrEqual(cur_node->name, (xmlChar*) X_NODE_GAIN))
       {
         ProcessGainElement(cur_node);
+      }
+      else if(xmlStrEqual(cur_node->name, (xmlChar*) X_NODE_G29_CORRECTION)) {
+        ProcessG29CorrectionElement(cur_node);
       }
       else
       {

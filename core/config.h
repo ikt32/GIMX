@@ -144,6 +144,12 @@ typedef struct
         int spring;
         int damper;
       } gain;
+      struct 
+      {
+        int enable;
+        int zero_gain;
+        int axis_range;
+      } g29;
     } ffb_tweaks;
   } params;
 }s_config_entry;

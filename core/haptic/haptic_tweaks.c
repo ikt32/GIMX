@@ -34,16 +34,22 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
         break;
     case E_DATA_TYPE_CONSTANT:
         // get the axis value
-        if(tweaks->axis_address) {
-            int axis_value = *(tweaks->axis_address);
+        if(tweaks->g29.enable && tweaks->g29.axis_address) {
+            int axis_value = *(tweaks->g29.axis_address);
             int constant_level = data->constant.level;
+
+            int zero_gain = tweaks->g29.zero_gain;
+            int axis_range = tweaks->g29.axis_range;
+            int gain = 100;
             
             // calculate the gain
-            if(abs(axis_value) < 300) {
-                int gain = abs(axis_value) / 3;
+            if(abs(axis_value) < axis_range) {
+                // calculate the gain within the axis range
+                gain = (abs(axis_value) * (100 - zero_gain) / axis_range) + zero_gain;
                 APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
             }
-            ginfo("haptic_tweak_apply: axis address: %p, axis value: %d, constant_level: %d, tweaked_constant_level\n", (void *)tweaks->axis_address, axis_value, constant_level, data->constant.level);
+            ginfo("g29_correction: axis address: %p, axis value: %d, constant_level: %d, gain %d\n", 
+                (void *)tweaks->g29.axis_address, axis_value, constant_level, gain);
 
         }
         if (tweaks->gain.constant != 100) {

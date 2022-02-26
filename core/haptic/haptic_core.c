@@ -138,8 +138,9 @@ void haptic_core_set_tweaks(struct haptic_core * core, const s_haptic_core_tweak
         if (core->sink.ptr->caps != E_HAPTIC_SINK_CAP_NONE) {
             ginfo("\n");
         }
-        if(tweaks->axis_address) {
-            ginfo("axis_addres: %p\n", (void *)tweaks->axis_address);
+        if(tweaks->g29.enable && tweaks->g29.axis_address) {
+            ginfo("FFB G29 Correction: zero_gain: %d, axis_range: %d, axis_address: %p\n", 
+                tweaks->g29.zero_gain, tweaks->g29.axis_range, (void *)tweaks->g29.axis_address);
         }
     }
 

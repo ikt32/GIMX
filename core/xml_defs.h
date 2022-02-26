@@ -73,6 +73,9 @@
 #define X_ATTR_CONSTANT "constant"
 #define X_ATTR_SPRING "spring"
 #define X_ATTR_DAMPER "damper"
+#define X_NODE_G29_CORRECTION "g29_correction"
+#define X_ATTR_ZERO_GAIN "zero_gain"
+#define X_ATTR_AXIS_RANGE "axis_range"
 
 #define X_NODE_MACROS "macros"
 
