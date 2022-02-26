@@ -419,6 +419,11 @@ static int ProcessEventElement(xmlNode * a_node, unsigned char mapper)
         case E_EVENT_TYPE_AXIS:
         case E_EVENT_TYPE_AXIS_DOWN:
         case E_EVENT_TYPE_AXIS_UP:
+          if(entry.device.type == E_DEVICE_TYPE_JOYSTICK) {
+            ginfo("found joystick axis %d, name: %s, controller_id: %d, device_id: %d\n", 
+              entry.event.id, ginput_joystick_name(entry.device.id), entry.controller_id, entry.device.id
+            );
+          }
           entry.params.mapper.axis = entry.event.id;
           break;
         default:

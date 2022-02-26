@@ -138,6 +138,9 @@ void haptic_core_set_tweaks(struct haptic_core * core, const s_haptic_core_tweak
         if (core->sink.ptr->caps != E_HAPTIC_SINK_CAP_NONE) {
             ginfo("\n");
         }
+        if(tweaks->axis_address) {
+            ginfo("axis_addres: %p\n", (void *)tweaks->axis_address);
+        }
     }
 
     core->tweaks = *tweaks;

@@ -162,7 +162,7 @@ static void adapter_dump_state(int adapter)
 
   for (i = 0; i < AXIS_MAX; i++) {
       if (axis[i])
-          printf(", %s (%d)", controller_get_axis_name(adapters[adapter].ctype, i), axis[i]);
+          printf(", %s (%d) [%p]", controller_get_axis_name(adapters[adapter].ctype, i), axis[i], (void *)&axis[i]);
   }
 
   printf("\n");
@@ -1365,6 +1365,7 @@ int adapter_start()
     if (ret != -1) {
         adapter->cstats = stats_init(E_STATS_TYPE_CONTROLLER);
     }
+
   }
 
   return ret;
