@@ -5,6 +5,7 @@
 
 #include <limits.h>
 #include <haptic/haptic_core.h>
+#include <math.h>
 #include "gimx.h"
 
 #define SWAP(TYPE, V1, V2) \
@@ -19,6 +20,8 @@
             int64_t tmp = VALUE * GAIN / 100; \
             VALUE = CLAMP(MIN, tmp, MAX); \
         }
+
+#define PI 3.14159265
 
 void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data * data) {
 
@@ -45,7 +48,14 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
             // calculate the gain
             if(abs(axis_value) < axis_range) {
                 // calculate the gain within the axis range
-                gain = (abs(axis_value) * (100 - zero_gain) / axis_range) + zero_gain;
+                // use a cosine curve between the upper and lower bounds
+                // to help smooth the transitions
+
+                double r = ((axis_range - abs(axis_value)) * PI) / axis_range;
+                double c = ( cos(r) + 1.0 ) * (100.0 - zero_gain) / 2.0;
+                gain = (int)c + zero_gain;
+
+                //gain = (abs(axis_value) * (100 - zero_gain) / axis_range) + zero_gain;
                 APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
             }
             ginfo("g29_correction: axis address: %p, axis value: %d, constant_level: %d, gain %d\n", 
