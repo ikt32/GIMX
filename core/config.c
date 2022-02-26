@@ -89,6 +89,13 @@ static s_haptic_core_tweaks ffb_tweaks[MAX_CONTROLLERS][MAX_PROFILES];
 
 void cfg_set_ffb_tweaks(const s_config_entry * entry)
 {
+  // determine the axis for the tweaks
+  s_mapper* mapper = joystick_axes[entry->device.id][entry->controller_id][entry->profile_id].mappers;
+  int axis = mapper->axis_props.axis;
+  int *axis_address = &adapter_get(entry->controller_id)->axis[axis];
+  ginfo("setting ffb_tweaks for controller_id: %d, device_id: %d, profile_id: %d, axis: %d, axis_address: %p\n", 
+    entry->controller_id, entry->device.id, entry->profile_id, axis, axis_address);
+  ffb_tweaks[entry->controller_id][entry->profile_id].axis_address = axis_address;
   ffb_tweaks[entry->controller_id][entry->profile_id].invert = entry->params.ffb_tweaks.invert;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.rumble = entry->params.ffb_tweaks.gain.rumble;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.constant = entry->params.ffb_tweaks.gain.constant;
@@ -108,6 +115,7 @@ void cfg_init_ffb_tweaks()
   {
     for (j = 0; j < MAX_PROFILES; ++j)
     {
+      ffb_tweaks[i][j].axis_address = NULL;
       ffb_tweaks[i][j].invert = 0;
       ffb_tweaks[i][j].gain.rumble = 100;
       ffb_tweaks[i][j].gain.constant = 100;

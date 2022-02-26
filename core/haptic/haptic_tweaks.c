@@ -5,6 +5,7 @@
 
 #include <limits.h>
 #include <haptic/haptic_core.h>
+#include "gimx.h"
 
 #define SWAP(TYPE, V1, V2) \
         TYPE tmp = V1; \
@@ -32,6 +33,19 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
         }
         break;
     case E_DATA_TYPE_CONSTANT:
+        // get the axis value
+        if(tweaks->axis_address) {
+            int axis_value = *(tweaks->axis_address);
+            int constant_level = data->constant.level;
+            
+            // calculate the gain
+            if(abs(axis_value) < 300) {
+                int gain = abs(axis_value) / 3;
+                APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
+            }
+            ginfo("haptic_tweak_apply: axis address: %p, axis value: %d, constant_level: %d, tweaked_constant_level\n", (void *)tweaks->axis_address, axis_value, constant_level, data->constant.level);
+
+        }
         if (tweaks->gain.constant != 100) {
             APPLY_GAIN(data->constant.level, tweaks->gain.constant, -SHRT_MAX, SHRT_MAX)
         }
