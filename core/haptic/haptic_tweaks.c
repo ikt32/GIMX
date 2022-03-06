@@ -26,6 +26,8 @@
 
 void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data * data) {
 
+    int last_constant = 0;
+
     switch (data->type) {
     case E_DATA_TYPE_RUMBLE:
         if (tweaks->gain.rumble != 100) {
@@ -45,9 +47,12 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
             int zero_gain = tweaks->g29.zero_gain;
             int axis_range = tweaks->g29.axis_range;
             int gain = 100;
+
+            int rev_dir = !((last_constant < 0) == (data->constant.level < 0));
+            last_constant  = data->constant.level;
             
             // calculate the gain
-            if(abs(axis_value) < axis_range) {
+            if(abs(axis_value) < axis_range && rev_dir) {
                 // calculate the gain within the axis range
                 // use a cosine curve between the upper and lower bounds
                 // to help smooth the transitions
@@ -56,7 +61,6 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
                 double c = ( cos(r) + 1.0 ) * (100.0 - zero_gain) / 2.0;
                 gain = (int)c + zero_gain;
 
-                //gain = (abs(axis_value) * (100 - zero_gain) / axis_range) + zero_gain;
                 APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
             }
             if(gimx_params.debug.haptic) {
