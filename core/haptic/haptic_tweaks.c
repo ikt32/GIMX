@@ -6,7 +6,8 @@
 #include <limits.h>
 #include <haptic/haptic_core.h>
 #include <math.h>
-#include "gimx.h"
+#include <gimx.h>
+#include <gimxtime/include/gtime.h>
 
 #define SWAP(TYPE, V1, V2) \
         TYPE tmp = V1; \
@@ -58,9 +59,12 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
                 //gain = (abs(axis_value) * (100 - zero_gain) / axis_range) + zero_gain;
                 APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
             }
-            ginfo("g29_correction: axis address: %p, axis value: %d, constant_level: %d, gain %d\n", 
-                (void *)tweaks->g29.axis_address, axis_value, constant_level, gain);
-
+            if(gimx_params.debug.haptic) {
+                gtime now = gtime_gettime();
+                printf("g29_correction: time: %lu.%06lu, axis address: %p, axis value: %d, constant_level: %d, gain %d\n",
+                     GTIME_SECPART(now), GTIME_USECPART(now),
+                    (void *)tweaks->g29.axis_address, axis_value, constant_level, gain);
+            }
         }
         if (tweaks->gain.constant != 100) {
             APPLY_GAIN(data->constant.level, tweaks->gain.constant, -SHRT_MAX, SHRT_MAX)
