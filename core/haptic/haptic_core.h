@@ -77,6 +77,12 @@ typedef struct {
         int spring;
         int damper;
     } gain;
+    struct {
+        int enable;
+        int min_gain;
+        int range_start;
+        int range_end;
+    } g29;
 } s_haptic_core_tweaks;
 
 struct haptic_core;

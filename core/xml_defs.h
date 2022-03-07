@@ -74,6 +74,11 @@
 #define X_ATTR_SPRING "spring"
 #define X_ATTR_DAMPER "damper"
 
+#define X_NODE_G29_CORRECTION "g29_correction"
+#define X_ATTR_G29C_MIN_GAIN "min_gain"
+#define X_ATTR_G29C_RANGE_START "range_start"
+#define X_ATTR_G29C_RANGE_END "range_end"
+
 #define X_NODE_MACROS "macros"
 
 #endif /* XML_DEFS_H_ */
