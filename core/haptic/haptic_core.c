@@ -138,10 +138,6 @@ void haptic_core_set_tweaks(struct haptic_core * core, const s_haptic_core_tweak
         if (core->sink.ptr->caps != E_HAPTIC_SINK_CAP_NONE) {
             ginfo("\n");
         }
-        if(tweaks->g29.enable) {
-            ginfo("FFB G29 Correction: min_gain: %d, range_start: %d, range_end: %d\n", 
-                tweaks->g29.min_gain, tweaks->g29.range_start, tweaks->g29.range_end);
-        }
     }
 
     core->tweaks = *tweaks;

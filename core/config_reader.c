@@ -1061,12 +1061,14 @@ static void ProcessGainElement(xmlNode * a_node)
   GetIntProp(a_node, X_ATTR_DAMPER, &entry.params.ffb_tweaks.gain.damper);
 }
 
-static void ProcessG29CorrectionElement(xmlNode * a_node)
+static void ProcessLutElement(xmlNode * a_node)
 {
-  entry.params.ffb_tweaks.g29.enable = 1;
-  GetIntProp(a_node, X_ATTR_G29C_MIN_GAIN, &entry.params.ffb_tweaks.g29.min_gain);
-  GetIntProp(a_node, X_ATTR_G29C_RANGE_START, &entry.params.ffb_tweaks.g29.range_start);
-  GetIntProp(a_node, X_ATTR_G29C_RANGE_END, &entry.params.ffb_tweaks.g29.range_end);
+  GetIntProp(a_node, X_ATTR_LUT_INPUT_0, &entry.params.ffb_tweaks.lut.input_0);
+  GetIntProp(a_node, X_ATTR_LUT_OUTPUT_0, &entry.params.ffb_tweaks.lut.output_0);
+  GetIntProp(a_node, X_ATTR_LUT_INPUT_1, &entry.params.ffb_tweaks.lut.input_1);
+  GetIntProp(a_node, X_ATTR_LUT_OUTPUT_1, &entry.params.ffb_tweaks.lut.output_1);
+  GetIntProp(a_node, X_ATTR_LUT_INPUT_2, &entry.params.ffb_tweaks.lut.input_2);
+  GetIntProp(a_node, X_ATTR_LUT_OUTPUT_2, &entry.params.ffb_tweaks.lut.output_2);
 }
 
 static int ProcessForceFeedbackElement(xmlNode * a_node)
@@ -1080,7 +1082,6 @@ static int ProcessForceFeedbackElement(xmlNode * a_node)
   entry.params.ffb_tweaks.gain.constant = 100;
   entry.params.ffb_tweaks.gain.spring = 100;
   entry.params.ffb_tweaks.gain.damper = 100;
-  entry.params.ffb_tweaks.g29.enable = 0;
 
   xmlNode* cur_node = NULL;
   for (cur_node = a_node->children; cur_node; cur_node = cur_node->next)
@@ -1100,8 +1101,8 @@ static int ProcessForceFeedbackElement(xmlNode * a_node)
       {
         ProcessGainElement(cur_node);
       }
-      else if(xmlStrEqual(cur_node->name, (xmlChar*) X_NODE_G29_CORRECTION)) {
-        ProcessG29CorrectionElement(cur_node);
+      else if(xmlStrEqual(cur_node->name, (xmlChar*) X_NODE_LUT)) {
+        ProcessLutElement(cur_node);
       }
       else
       {

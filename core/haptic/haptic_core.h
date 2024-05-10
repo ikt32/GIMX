@@ -78,11 +78,13 @@ typedef struct {
         int damper;
     } gain;
     struct {
-        int enable;
-        int min_gain;
-        int range_start;
-        int range_end;
-    } g29;
+        int input_0;
+        int output_0;
+        int input_1;
+        int output_1;
+        int input_2;
+        int output_2;
+    } lut;
 } s_haptic_core_tweaks;
 
 struct haptic_core;

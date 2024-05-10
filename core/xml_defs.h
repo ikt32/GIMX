@@ -74,10 +74,13 @@
 #define X_ATTR_SPRING "spring"
 #define X_ATTR_DAMPER "damper"
 
-#define X_NODE_G29_CORRECTION "g29_correction"
-#define X_ATTR_G29C_MIN_GAIN "min_gain"
-#define X_ATTR_G29C_RANGE_START "range_start"
-#define X_ATTR_G29C_RANGE_END "range_end"
+#define X_NODE_LUT "lut"
+#define X_ATTR_LUT_INPUT_0 "input_0"
+#define X_ATTR_LUT_OUTPUT_0 "output_0"
+#define X_ATTR_LUT_INPUT_1 "input_1"
+#define X_ATTR_LUT_OUTPUT_1 "output_1"
+#define X_ATTR_LUT_INPUT_2 "input_2"
+#define X_ATTR_LUT_OUTPUT_2 "output_2"
 
 #define X_NODE_MACROS "macros"
 

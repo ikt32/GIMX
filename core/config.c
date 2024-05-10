@@ -94,10 +94,12 @@ void cfg_set_ffb_tweaks(const s_config_entry * entry)
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.constant = entry->params.ffb_tweaks.gain.constant;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.spring = entry->params.ffb_tweaks.gain.spring;
   ffb_tweaks[entry->controller_id][entry->profile_id].gain.damper = entry->params.ffb_tweaks.gain.damper;
-  ffb_tweaks[entry->controller_id][entry->profile_id].g29.min_gain = entry->params.ffb_tweaks.g29.min_gain;
-  ffb_tweaks[entry->controller_id][entry->profile_id].g29.range_start = entry->params.ffb_tweaks.g29.range_start;
-  ffb_tweaks[entry->controller_id][entry->profile_id].g29.range_end = entry->params.ffb_tweaks.g29.range_end;
-  ffb_tweaks[entry->controller_id][entry->profile_id].g29.enable = entry->params.ffb_tweaks.g29.enable;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.input_0 = entry->params.ffb_tweaks.lut.input_0;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.output_0 = entry->params.ffb_tweaks.lut.output_0;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.input_1 = entry->params.ffb_tweaks.lut.input_1;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.output_1 = entry->params.ffb_tweaks.lut.output_1;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.input_2 = entry->params.ffb_tweaks.lut.input_2;
+  ffb_tweaks[entry->controller_id][entry->profile_id].lut.output_2 = entry->params.ffb_tweaks.lut.output_2;
 }
 
 const s_haptic_core_tweaks * cfg_get_ffb_tweaks(int controller)
@@ -117,10 +119,14 @@ void cfg_init_ffb_tweaks()
       ffb_tweaks[i][j].gain.constant = 100;
       ffb_tweaks[i][j].gain.spring = 100;
       ffb_tweaks[i][j].gain.damper = 100;
-      ffb_tweaks[i][j].g29.enable = 0;
-      ffb_tweaks[i][j].g29.min_gain = 20;
-      ffb_tweaks[i][j].g29.range_start = 1000;
-      ffb_tweaks[i][j].g29.range_end = 10000;
+
+      // All 0: Disable feature by default.
+      ffb_tweaks[i][j].lut.input_0 = 0;
+      ffb_tweaks[i][j].lut.output_0 = 0;
+      ffb_tweaks[i][j].lut.input_1 = 0;
+      ffb_tweaks[i][j].lut.output_1 = 0;
+      ffb_tweaks[i][j].lut.input_2 = 0;
+      ffb_tweaks[i][j].lut.output_2 = 0;
     }
   }
 }

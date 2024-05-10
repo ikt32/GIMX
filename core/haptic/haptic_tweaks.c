@@ -6,8 +6,10 @@
 #include <limits.h>
 #include <haptic/haptic_core.h>
 #include <math.h>
-#include <gimx.h>
-#include <gimxtime/include/gtime.h>
+#include <stdlib.h>
+
+#define VALMAP(x, in_min, in_max, out_min, out_max) \
+    ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 #define SWAP(TYPE, V1, V2) \
         TYPE tmp = V1; \
@@ -35,32 +37,25 @@ void haptic_tweak_apply(const s_haptic_core_tweaks * tweaks, s_haptic_core_data 
         }
         break;
     case E_DATA_TYPE_CONSTANT:
-        if (tweaks->g29.enable) {
-            int constant_level = data->constant.level;
+        if (tweaks->lut.input_0 || tweaks->lut.output_0 ||
+            tweaks->lut.input_1 || tweaks->lut.output_1 ||
+            tweaks->lut.input_2 || tweaks->lut.output_2) {
+            int16_t abs_constant = abs(data->constant.level);
 
-            int min_gain = tweaks->g29.min_gain;
-            int range_start = tweaks->g29.range_start;
-            int range_end = tweaks->g29.range_end;
-            int ffb_range = range_end - range_start;
-            
-            // calculate the gain within the FFB range
-            // use a cosine curve between the upper and lower bounds
-            // to help smooth the transitions
+            // This would've been nicer if it was a map but C.
+            if (abs_constant >= 0 && abs_constant <= tweaks->lut.input_0)
+                abs_constant = VALMAP(abs_constant, 0, tweaks->lut.input_0, 0, tweaks->lut.output_0);
+            else if (abs_constant > tweaks->lut.input_0 && abs_constant <= tweaks->lut.input_1)
+                abs_constant = VALMAP(abs_constant, tweaks->lut.input_0, tweaks->lut.input_1, tweaks->lut.output_0, tweaks->lut.output_1);
+            else if (abs_constant > tweaks->lut.input_1 && abs_constant <= tweaks->lut.input_2)
+                abs_constant = VALMAP(abs_constant, tweaks->lut.input_1, tweaks->lut.input_2, tweaks->lut.output_1, tweaks->lut.output_2);
+            else // (abs_constant > tweaks->lut.input_2 && abs_constant <= 10000)
+                abs_constant = VALMAP(abs_constant, tweaks->lut.input_2, 10000, tweaks->lut.output_2, 10000);
 
-            int abs_constant = abs(constant_level);
-            int clamped = CLAMP(range_start, abs_constant, range_end);
-
-            double r = ( (ffb_range - (clamped - range_start)) * M_PI) / ffb_range;
-            double c = ( cos(r) + 1.0 ) * (100.0 - min_gain) / 2.0;
-            int gain = (int)c + min_gain;
-
-            APPLY_GAIN(data->constant.level, gain, -SHRT_MAX, SHRT_MAX);
-            if(gimx_params.debug.haptic) {
-                gtime now = gtime_gettime();
-                printf("g29_correction: time: %lu.%06lu, constant_level: %d, gain %d\n",
-                     GTIME_SECPART(now), GTIME_USECPART(now), constant_level, gain);
-            }
-
+            if (data->constant.level < 0)
+                data->constant.level = -abs_constant;
+            else
+                data->constant.level = abs_constant;
         }
         if (tweaks->gain.constant != 100) {
             APPLY_GAIN(data->constant.level, tweaks->gain.constant, -SHRT_MAX, SHRT_MAX)

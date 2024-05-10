@@ -144,12 +144,18 @@ typedef struct
         int spring;
         int damper;
       } gain;
+      // A very basic LUT with 3 points, allowing mapping a 4-section "curve".
+      // Values will be linearly interpolated between these points.
+      // (0,0) and (10000,10000) are fixed.
+      // This is C so no std::vector for an easy full LUT...
       struct {
-        int enable;
-        int min_gain;
-        int range_start;
-        int range_end;
-      } g29;
+        int input_0;
+        int output_0;
+        int input_1;
+        int output_1;
+        int input_2;
+        int output_2;
+      } lut;
     } ffb_tweaks;
   } params;
 }s_config_entry;
